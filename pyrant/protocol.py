@@ -404,13 +404,14 @@ class TyrantProtocol(object):
         self._sock.send(self.ITERNEXT)
         return self._sock.get_unicode()
 
-    def fwmkeys(self, prefix, maxkeys=-1):
+    def fwmkeys(self, prefix, maxkeys=-1, literal=False):
         """
         Get up to the first maxkeys starting with prefix
         """
         self._sock.send(self.FWMKEYS, _ulen(prefix), maxkeys, prefix)
         numkeys = self._sock.get_int()
-        return [self._sock.get_unicode() for i in xrange(numkeys)]
+        fn = self._sock.get_str if literal else self._sock.get_unicode
+        return [fn() for i in xrange(numkeys)]
 
     def addint(self, key, num=0):
         """

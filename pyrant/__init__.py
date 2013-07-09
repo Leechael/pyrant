@@ -448,7 +448,7 @@ class Tyrant(object):
         if maxkeys is None:
             maxkeys = len(self)
 
-        return self.proto.fwmkeys(prefix, maxkeys)
+        return self.proto.fwmkeys(prefix, maxkeys, self.literal)
 
     def sync(self):
         """
