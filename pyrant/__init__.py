@@ -161,7 +161,7 @@ class Tyrant(object):
             flat = list(itertools.chain(*((k, utils.from_python(v)) for
                                            k,v in value.iteritems())))
             args = [key] + flat
-            self.proto.misc('put', args)  # EXPLAIN why is this hack necessary?
+            self.proto.misc('put', args, literal=self.literal)  # EXPLAIN why is this hack necessary?
         else:
             if isinstance(value, (list, tuple)):
                 assert self.separator, "Separator is not set"
@@ -361,7 +361,7 @@ class Tyrant(object):
         if not isinstance(keys, (list, tuple)):
             keys = list(keys)
 
-        self.proto.misc('outlist', keys, opts)
+        self.proto.misc('outlist', keys, opts, literal=self.literal)
 
     def multi_get(self, keys):
         """
@@ -381,7 +381,7 @@ class Tyrant(object):
         prep_val = lambda v: utils.to_python(v, self.db_type, self.separator)
 
         keys = list(keys)
-        data = self.proto.misc('getlist', keys, 0)
+        data = self.proto.misc('getlist', keys, 0, literal=self.literal)
         data_keys = data[::2]
         data_vals = (prep_val(x) for x in data[1::2])
         return zip(data_keys, data_vals)
@@ -437,7 +437,7 @@ class Tyrant(object):
                 value = self.separator.join(strings)
             ready_pairs.extend((key, value))
 
-        self.proto.misc('putlist', ready_pairs, opts)
+        self.proto.misc('putlist', ready_pairs, opts, literal=self.literal)
 
     def prefix_keys(self, prefix, maxkeys=None):
         """

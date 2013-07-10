@@ -653,7 +653,7 @@ class TyrantProtocol(object):
 
         return self.misc('search', args, opts)
 
-    def misc(self, func, args, opts=0):
+    def misc(self, func, args, opts=0, literal=False):
         """
         Executes custom function.
 
@@ -683,4 +683,5 @@ class TyrantProtocol(object):
         finally:
             numrecs = self._sock.get_int()
 
-        return [self._sock.get_unicode() for i in xrange(numrecs)]
+        fn = self._sock.get_str if literal else self._sock.get_unicode
+        return [fn() for i in xrange(numrecs)]
